@@ -12,6 +12,15 @@ h1{
   font-family: 'Pacifico', cursive;
 } 
 
+.header-image {
+  display: block;
+  margin: 1rem auto;
+  max-width: 70%;
+  height: auto;
+}
+
+
+
 .fancy-title {
   font-family: 'Caveat', cursive;
   font-size: 2rem;
