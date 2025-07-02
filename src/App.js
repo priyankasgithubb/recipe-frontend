@@ -1,23 +1,74 @@
-import logo from './logo.svg';
+import { useState } from "react";
+import SearchBar from "./components/search";
+import FavouriteRecipes from "./components/fav";
 import './App.css';
 
 function App() {
+  const [dish, setDish] = useState('');
+  const [error, setError] = useState(null);
+  const [recipes, setRecipes] = useState([]);
+
+  const getRecipe = async () => {
+    try {
+      const res = await fetch(`https://recipe-backend-1-tns9.onrender.com/recipes?dish=${dish}`);
+      const result = await res.json();
+
+      console.log('raw data ->', result);
+
+      if (Array.isArray(result) && result.length > 0) {
+        setRecipes(result);
+        setError(null);
+      } else {
+        setError("No recipes found");
+        setRecipes([]);
+      }
+
+    } catch (e) {
+      console.log("Error fetching:", e);
+      setError("Server Error");
+      setRecipes([]);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <h1>Sweet Corner ᯓ★ˎˊ˗</h1>
+
+      <SearchBar
+        dish={dish}
+        setDish={setDish}
+        getRecipe={getRecipe}
+        error={error}
+      />
+
+      <h2>⠀⠀⠀⢠⡾⠲⠶⣤⣀⣠⣤⣤⣤⡿⠛⠿⡴⠾⠛⢻⡆⠀⠀⠀
+⠀⠀⠀⣼⠁⠀⠀⠀⠉⠁⠀⢀⣿⠐⡿⣿⠿⣶⣤⣤⣷⡀⠀⠀
+⠀⠀⠀⢹⡶⠀⠀⠀⠀⠀⠀⠈⢯⣡⣿⣿⣀⣸⣿⣦⢓⡟⠀⠀
+⠀⠀⢀⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠹⣍⣭⣾⠁⠀⠀
+⠀⣀⣸⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣸⣷⣤⡀
+⠈⠉⠹⣏⡁⠀⢸⣿⠀⠀⠀⢀⡀⠀⠀⠀⣿⠆⠀⢀⣸⣇⣀⠀
+⠀⠐⠋⢻⣅⣄⢀⣀⣀⡀⠀⠯⠽⠂⢀⣀⣀⡀⠀⣤⣿⠀⠉⠀
+⠀⠀⠴⠛⠙⣳⠋⠉⠉⠙⣆⠀⠀⢰⡟⠉⠈⠙⢷⠟⠉⠙⠂⠀
+⠀⠀⠀⠀⠀⢻⣄⣠⣤⣴⠟⠛⠛⠛⢧⣤⣤⣀⡾</h2>
+
+      {error && <p style={{ color: 'red', marginTop: 20 }}>{error}</p>}
+
+      <div className="recipes-container">
+        {recipes.map((item, i) => (
+          <div key={item.id || i} className="recipe-card">
+            <h3>{item.title}</h3>
+            <a
+              href={`https://spoonacular.com/recipes/${item.title.replace(/ /g, "-")}-${item.id}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img src={item.image} alt={item.title} width="200px" />
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <FavouriteRecipes />
     </div>
   );
 }
