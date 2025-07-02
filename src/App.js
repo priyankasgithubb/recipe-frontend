@@ -10,7 +10,7 @@ function App() {
 
   const getRecipe = async () => {
     try {
-      const res = await fetch(`https://recipe-backend-1-tns9.onrender.com/recipes?dish=${dish}`);
+      const res = await fetch(`https://recipe-backend-90a5.onrender.com/recipes?dish=${dish}`);
       const result = await res.json();
 
       console.log('raw data ->', result);
